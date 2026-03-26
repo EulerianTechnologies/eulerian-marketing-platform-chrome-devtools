@@ -1,0 +1,81 @@
+name: Release to Chrome Web Store
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'   # triggers on v1.0.0, v1.1.0, v2.0.0 …
+
+permissions:
+  contents: write   # needed to create a GitHub Release
+
+jobs:
+  release:
+    name: Build, test & publish
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ───────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Node setup ─────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── 3. Guard — tag version must match manifest.json ───────────────────
+      - name: Check version consistency
+        run: |
+          TAG="${{ github.ref_name }}"
+          MANIFEST_VERSION=$(node -e "const m=require('./src/manifest.json'); console.log(m.version)")
+          TAG_VERSION="${TAG#v}"
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "❌ Tag $TAG does not match manifest version $MANIFEST_VERSION"
+            echo "Update src/manifest.json or push the correct tag."
+            exit 1
+          fi
+          echo "✅ Version consistent: $MANIFEST_VERSION"
+
+      # ── 4. Validate manifest ──────────────────────────────────────────────
+      - name: Validate manifest
+        run: node scripts/validate-manifest.js
+
+      # ── 5. Tests ──────────────────────────────────────────────────────────
+      - name: Run tests
+        run: npm test -- --ci --coverage
+
+      # ── 6. Build ──────────────────────────────────────────────────────────
+      - name: Build extension
+        run: npm run build
+
+      # ── 7. Upload to Chrome Web Store ─────────────────────────────────────
+      - name: Upload to Chrome Web Store
+        env:
+          CHROME_EXTENSION_ID:   ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID:      ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET:  ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN:  ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CWS_PUBLISH:           ${{ vars.CWS_AUTO_PUBLISH || 'false' }}
+        run: node scripts/upload-to-cws.js
+
+      # ── 8. Create GitHub Release ──────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name:   ${{ github.ref_name }}
+          name:       "Eulerian Marketing Platform Chrome DevTools ${{ github.ref_name }}"
+          body: |
+            ## What's changed
+            _Update this section before tagging the release._
+
+            ## Installation
+            Download `eulerian-devtools.zip` below, unzip, then load as an unpacked
+            extension in `chrome://extensions` (Developer mode on).
+          files: eulerian-devtools.zip
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}

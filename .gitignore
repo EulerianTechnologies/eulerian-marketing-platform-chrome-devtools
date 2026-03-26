@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+eulerian-devtools.zip
+.env
+.env.local
+*.local
+.DS_Store
+Thumbs.db

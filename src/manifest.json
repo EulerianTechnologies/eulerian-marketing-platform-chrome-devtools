@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Eulerian Marketing Platform Chrome DevTools",
+  "version": "1.1.0",
+  "description": "Extension to debug Client-Side integration of the Eulerian Marketing Platform",
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Open Eulerian DevTools"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "cookies",
+    "webRequest",
+    "sidePanel",
+    "alarms"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "injected.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "incognito": "spanning"
+}

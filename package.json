@@ -1,0 +1,52 @@
+{
+  "name": "eulerian-marketing-platform-chrome-devtools",
+  "version": "1.1.0",
+  "description": "Eulerian Marketing Platform Chrome DevTools \u2014 Chrome extension",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.js tests/**/*.js",
+    "validate": "node scripts/validate-manifest.js",
+    "ci": "npm run lint && npm run validate && npm test && npm run build",
+    "release": "npm run ci && node scripts/upload-to-cws.js"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "archiver": "^6.0.2",
+    "chrome-webstore-upload": "^3.2.0",
+    "eslint": "^8.57.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/utils.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 70,
+        "functions": 70,
+        "branches": 55,
+        "statements": 70
+      }
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2022": true,
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": "warn",
+      "no-undef": "off"
+    }
+  }
+}
