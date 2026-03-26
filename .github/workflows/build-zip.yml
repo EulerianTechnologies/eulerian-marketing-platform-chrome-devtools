@@ -2,14 +2,14 @@ name: Build & Package
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build extension zip
+    name: Test, build & package
     runs-on: ubuntu-latest
 
     steps:
@@ -28,18 +28,27 @@ jobs:
       - name: Validate manifest
         run: node scripts/validate-manifest.js
 
-      - name: Run tests
-        run: npm test -- --ci
+      - name: Run tests with coverage
+        run: npm test -- --ci --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 14
 
       - name: Build extension
         run: npm run build
+        # build.js: archive.directory(dist/, false) → manifest.json at zip root ✓
 
-      - name: Verify zip structure (manifest.json must be at root)
+      - name: Verify zip structure
         run: |
           echo "Contents of eulerian-marketing-platform-chrome-devtools.zip:"
           unzip -l eulerian-marketing-platform-chrome-devtools.zip
           if unzip -l eulerian-marketing-platform-chrome-devtools.zip | grep -q "manifest.json$"; then
-            echo "manifest.json is at root level"
+            echo " manifest.json is at root level — ready for Chrome Web Store"
           else
             echo " manifest.json NOT at root — zip structure is wrong"
             exit 1
@@ -48,7 +57,7 @@ jobs:
       - name: Upload extension zip
         uses: actions/upload-artifact@v4
         with:
-          name: eulerian-marketing-platform-chrome-devtools
+          name: eulerian-devtools
           path: eulerian-marketing-platform-chrome-devtools.zip
           if-no-files-found: error
           retention-days: 30

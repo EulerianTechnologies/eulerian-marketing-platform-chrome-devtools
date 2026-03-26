@@ -11,7 +11,7 @@ const archiver = require('archiver');
 
 const SRC  = path.resolve(__dirname, '../src');
 const DIST = path.resolve(__dirname, '../dist');
-const ZIP  = path.resolve(__dirname, '../eulerian-devtools.zip');
+const ZIP  = path.resolve(__dirname, '../eulerian-marketing-platform-chrome-devtools.zip');
 
 // ── Version bump from manifest ────────────────────────────────────────────
 const manifest = JSON.parse(fs.readFileSync(path.join(SRC, 'manifest.json'), 'utf8'));
