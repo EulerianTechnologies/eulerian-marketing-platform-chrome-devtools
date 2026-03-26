@@ -1,6 +1,6 @@
 {
   "name": "eulerian-marketing-platform-chrome-devtools",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Eulerian Marketing Platform Chrome DevTools \u2014 Chrome extension",
   "private": true,
   "scripts": {

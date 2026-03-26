@@ -109,7 +109,10 @@ window.TabTraffic = (function() {
     var statusText = hasRef ? 'present' : 'none';
 
     var body = hasRef
-      ? '<div class="ts-referer-val">' + esc(referer) + '</div>'
+      ? '<div style="display:flex;align-items:flex-start;gap:8px">' +
+          '<span class="ts-referer-val" style="flex:1">' + esc(referer) + '</span>' +
+          '<button class="copy-btn" data-copy="' + referer.replace(/"/g,'&quot;') + '" style="font-size:10px;padding:2px 8px;flex-shrink:0">Copy</button>' +
+        '</div>'
       : '<div class="ts-empty-row">No HTTP Referer on this page</div>';
 
     return '<div class="section" id="section-referer">' +
@@ -144,9 +147,13 @@ window.TabTraffic = (function() {
     '</div>';
 
     // Current URL display
+    var rawUrl = url || '';
     var urlRow = '<div style="margin-bottom:12px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm)">' +
-      '<div style="font-size:9.5px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;font-weight:500">Current URL</div>' +
-      '<div style="font-family:var(--mono);font-size:10px;color:var(--text2);word-break:break-all;line-height:1.5">' + esc(url || '—') + '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">' +
+        '<span style="font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:500">Current URL</span>' +
+        (rawUrl ? '<button class="copy-btn" data-copy="' + rawUrl.replace(/"/g,'&quot;') + '" style="font-size:10px;padding:2px 8px">Copy</button>' : '') +
+      '</div>' +
+      '<div style="font-family:var(--mono);font-size:10px;color:var(--text2);word-break:break-all;line-height:1.5">' + esc(rawUrl || '—') + '</div>' +
     '</div>';
 
     container.innerHTML = header + urlRow +

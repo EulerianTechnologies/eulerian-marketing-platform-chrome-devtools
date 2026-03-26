@@ -57,7 +57,7 @@ window.TabIdentity = (function() {
       '<div class="id-body open" id="idb-' + idx + '">' +
         '<div class="id-url" style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">' +
         '<span style="flex:1;word-break:break-all">' + esc(c.url) + '</span>' +
-        '<button class="copy-btn" data-copy="' + esc(c.url) + '" style="flex-shrink:0;font-size:10px;padding:2px 8px;margin-top:1px">Copy</button>' +
+        '<button class="copy-btn" data-copy="' + (c.url||'').replace(/"/g,'&quot;') + '" style="flex-shrink:0;font-size:10px;padding:2px 8px;margin-top:1px">Copy</button>' +
       '</div>' +
         '<table class="id-table">' +
           '<thead><tr><th class="id-th">Parameter</th><th class="id-th">Value</th></tr></thead>' +

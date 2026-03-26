@@ -138,7 +138,7 @@
 
     // Sanitize raw data — remove functions and non-serializable values so that
     // structured clone (used for CustomEvent.detail cross-world transfer) succeeds.
-    // EA_data on sfr.fr contains 'onload': ƒ which causes the whole payload to null.
+    // EA_data can contain 'onload': ƒ which causes the whole payload to null.
     function sanitize(raw) {
       if (raw == null) return null;
       if (Array.isArray(raw)) {

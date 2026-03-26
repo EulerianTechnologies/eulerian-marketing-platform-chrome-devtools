@@ -243,7 +243,7 @@ async function resetIdentityTab() {
     sendToBackground({ action: 'clearMiscCalls' },  2000)
   ]);
   // colData is cleared separately at status:'loading' in the onUpdated listener
-  // so deferred collector requests (like sfr.fr) are still captured after 'loading'
+  // so deferred collector requests are still captured after 'loading'
 }
 
 async function loadIdentityTab() {
@@ -281,7 +281,7 @@ chrome.runtime.onMessage.addListener(function(message) {
 
   // Collector URL hit received — refresh dataLayer tab if visible
   if (message.action === 'colDataUpdated') {
-    // Always refresh — sfr.fr sends /col AFTER 'complete', so we must update
+    // Always refresh — some sites sends /col AFTER 'complete', so we must update
     // even if the panel was not yet re-rendered by the 'complete' handler
     loadDataLayerTab();
     return;

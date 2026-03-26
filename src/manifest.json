@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Eulerian Marketing Platform Chrome DevTools",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Extension to debug Client-Side integration of the Eulerian Marketing Platform",
   "side_panel": {
     "default_path": "sidepanel.html"
